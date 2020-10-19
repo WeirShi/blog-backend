@@ -4,8 +4,8 @@
   "description": "博客系统后端接口项目",
   "main": "index.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon index.js",
-    "build": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development nodemon src/index.js",
+    "build": "cross-env NODE_ENV=production node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Weir.Shi",
@@ -22,7 +22,9 @@
     "mysql2": "^2.2.5"
   },
   "devDependencies": {
+    "@types/node": "^14.11.10",
     "cross-env": "^7.0.2",
-    "eslint": "^7.10.0"
+    "eslint": "^7.10.0",
+    "typescript": "^4.0.3"
   }
 }
