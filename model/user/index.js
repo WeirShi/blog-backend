@@ -15,6 +15,7 @@ const login = async ctx => {
             if (md5(password) !== pwd) {
                 ctx.loginFail({}, msg.LOGIN_PASSWORD_ERROR);
             } else {
+                await sqlModel.updateLoginTime(user.id);
                 const token = generateToken(user.id);
                 ctx.loginSuccess({token, ...others});
             }

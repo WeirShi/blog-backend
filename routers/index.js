@@ -9,21 +9,21 @@ const Article = require('../model/article');
 // router.prefix('/queryUsers') //接口前缀
 
 // admin api
-router.get("/category", Category.getCategoryList);
-router.post("/category", Category.addCategory);
-router.put("/category", Category.updateCategory);
-router.delete("/category", Category.deleteCategory);
+router.get("/category", Category.getCategoryList)
+    .post("/category", Category.addCategory)
+    .put("/category", Category.updateCategory)
+    .delete("/category", Category.deleteCategory)
 
-router.get("/tag", Tag.getTagList);
-router.post("/tag", Tag.addTag);
-router.put("/tag", Tag.updateTag);
-router.delete("/tag", Tag.deleteTag);
+    .get("/tag", Tag.getTagList)
+    .post("/tag", Tag.addTag)
+    .put("/tag", Tag.updateTag)
+    .delete("/tag", Tag.deleteTag)
 
-router.get("/article", Article.getArticleList);
-router.post("/article", Article.addArticle);
-router.delete("/article", Article.deleteArticle);
-router.get("/article/detail", Article.getArticleDetail);
-router.put("/article/publish", Article.isPubilshArticle);
+    .get("/article", Article.getArticleList)
+    .post("/article", Article.addArticle)
+    .delete("/article", Article.deleteArticle)
+    .get("/article/detail", Article.getArticleDetail)
+    .put("/article/publish", Article.isPubilshArticle)
 
 
 // blog api

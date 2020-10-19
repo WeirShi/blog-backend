@@ -18,7 +18,7 @@ const registSuccess = ctx => () => {
     ctx.body = Object.assign({}, R(statusCode.SUCCESS, {}, msg.REGIST_SUCCESS));
 }
 const registFail = ctx => (data, msg) => {
-    ctx.body = Object.assign({}, R(statusCode.SUCCESS, data, msg));
+    ctx.body = Object.assign({}, R(statusCode.ERROR, data, msg));
 }
 
 const needToken = ctx => msg => {
