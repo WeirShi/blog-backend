@@ -16,18 +16,20 @@ const user = require('./routers/user')
 const verifyToken = require('./middlewares/token');
 const customResponse = require('./middlewares/customResponse')
 
-
-app.use(logger());
-// 允许跨域
-app.use(cors());
-// 接口参数解析
-app.use(parser());
-// 自定义response回复
-app.use(customResponse());
-// 注册 登录接口 不需要验证token
-app.use(user.routes());
-app.use(verifyToken()).use(routers.routes());
-app.use(router.allowedMethods()); //解析路由
+// 日志
+app.use(logger())
+    // 允许跨域
+    .use(cors())
+    // 接口参数解析
+    .use(parser())
+    // 自定义response回复
+    .use(customResponse())
+    // 注册 登录接口 不需要验证token
+    .use(user.routes())
+    .use(verifyToken())
+    .use(routers.routes())
+     //解析路由
+    .use(router.allowedMethods());
 
 
 

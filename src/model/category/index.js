@@ -1,6 +1,4 @@
 const sqlModel = require('../../lib/mysql');
-const statusCode = require('../../lib/statusCode');
-const msg = require('../../lib/responseMsg');
 
 /**
  * 获取分类列表

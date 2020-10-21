@@ -10,9 +10,5 @@ const generateToken = (userId) => {
     return token;
 }
 
-// generateToken(1);
-
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoxLCJpYXQiOjE2MDMwMDgxOTgsImV4cCI6MTYwMzI2NzM5OH0.Gy8zdERK1q3PPj0EZGGTfhe8TMANj3DhcJ3y1v2hQx0
-
 module.exports = generateToken;
 

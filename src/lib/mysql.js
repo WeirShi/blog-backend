@@ -66,7 +66,7 @@ const addCategory = (params) => {
 // 删除分类
 const deleteCategory = (params) => {
     const { id } = params;
-    let _sql = `update categories set is_delete = 1, update_time=NOW() where id = ?;`;
+    let _sql = `update categories set is_delete = 1 where id = ?;`;
     return query(_sql, [id]);
 }
 
@@ -116,7 +116,7 @@ const deleteTag = (params) => {
 // 更新分类
 const updateTag = (params) => {
     const { id, name, sort, color } = params;
-    let _sql = `update tags set name = ?, sort = ?, color = ?, update_time=NOW() where id = ? and is_delete = 0;`;
+    let _sql = `update tags set name = ?, sort = ?, color = ? where id = ? and is_delete = 0;`;
     return query(_sql, [name, sort, color, id]);
 }
 
@@ -182,21 +182,21 @@ const isPublishArticle = (params) => {
 // 删除文章
 const deleteArticle = (params) => {
     const { id } = params;
-    let _sql = `update articles set is_delete = 1, update_time=NOW() where id = ${id};`;
+    let _sql = `update articles set is_delete = 1 where id = ${id};`;
     return query(_sql);
 }
 
 // 移动文章到草稿箱
 const addArticleToDrafts = (params) => {
     const { id } = params;
-    let _sql = `update articles set is_delete = 0, is_drafts = 1, is_publish = 0, update_time=NOW() where id = ${id};`;
+    let _sql = `update articles set is_delete = 0, is_drafts = 1, is_publish = 0 where id = ${id};`;
     return query(_sql);
 }
 
 // 移动文章到列表
 const addArticleToList = (params) => {
     const { id } = params;
-    let _sql = `update articles set is_delete = 0, is_drafts = 0, is_publish = 0, update_time=NOW() where id = ${id};`;
+    let _sql = `update articles set is_delete = 0, is_drafts = 0, is_publish = 0 where id = ${id};`;
     return query(_sql);
 }
 

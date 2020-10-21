@@ -1,6 +1,4 @@
 const sqlModel = require('../../lib/mysql');
-const statusCode = require('../../lib/statusCode');
-const msg = require('../../lib/responseMsg');
 
 const handleTagAndCategory = (tags, categories) => {
     return new Promise(async (resolve, reject) => {
@@ -54,7 +52,7 @@ const getArticleList = async ctx => {
 }
 
 // 新增文章
-const addArticle = async (ctx, next) => {
+const addArticle = async ctx => {
     const body = ctx.request.body;
     try {
         const res = await sqlModel.addArticle(body);
@@ -68,7 +66,7 @@ const addArticle = async (ctx, next) => {
 }
 
 // 文章详情
-const getArticleDetail = async (ctx, next) => {
+const getArticleDetail = async ctx => {
     const query = ctx.request.query;
     try {
         const res = await sqlModel.getArticleDetail(query);
@@ -94,7 +92,7 @@ const getArticleDetail = async (ctx, next) => {
 }
 
 // 发布 or 取消发布文章
-const isPubilshArticle = async (ctx) => {
+const isPubilshArticle = async ctx => {
     const body = ctx.request.body;
     try {
         const res = await sqlModel.isPublishArticle(body);
