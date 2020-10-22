@@ -10,6 +10,7 @@ module.exports = () => async (ctx, next) => {
         try {
             // verify 函数验证 token，并获取用户相关信息
             const result = await verifyToken(token);
+            
             if (result && result.data) {
                 // 进入下一个中间件
                 await next()

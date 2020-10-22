@@ -9,12 +9,13 @@ const getCategoryList = async ctx => {
     try {
         const [{ total }] = await sqlModel.getCategoryTotal();
         const list = await sqlModel.getCategoryList(query);
-        ctx.quertSuccess({
+        ctx.querySuccess({
             total,
             list
         });
     } catch (error) {
-        ctx.quertFail(error);
+        console.log('category', error);
+        ctx.queryFail(error);
     }
 }
 

@@ -14,7 +14,7 @@ const getTagList = async ctx => {
             list
         });
     } catch (error) {
-        ctx.quertFail(error);
+        ctx.queryFail(error);
     }
 }
 

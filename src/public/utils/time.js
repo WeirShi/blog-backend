@@ -5,7 +5,10 @@
  * @param {String} format eg: 'yyyy-MM-ddhh:mm:ss'
  * @returns {String}
  */
-const dateFmt = (date, format = 'yyyy-MM-dd hh:mm:ss') => {
+const dateFmt = (date, format = 'yyyy/MM/dd hh:mm:ss') => {
+    if (!date) {
+        return '';
+    }
     var o = {
         'M+': date.getMonth() + 1, // month
         'd+': date.getDate(), // day
@@ -26,6 +29,6 @@ const dateFmt = (date, format = 'yyyy-MM-dd hh:mm:ss') => {
     return format;
 }
 
-module.exports = {
-    dateFmt
-}
+Date.prototype.toJSON = function () {
+    return dateFmt(this);
+};
