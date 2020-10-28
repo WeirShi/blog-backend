@@ -6,9 +6,17 @@
 export const HTTP_ERROR_TEXT = '数据不存在';
 
 export const HTTP_QUERY_SUCCESS_TEXT = '查询成功';
+export const HTTP_QUERY_ERROR_TEXT = '查询失败';
+
+
 export const HTTP_ADD_SUCCESS_TEXT = '添加成功';
+export const HTTP_ADD_ERROR_TEXT = '添加失败';
+
 export const HTTP_UPDATE_SUCCESS_TEXT = '更新成功';
+export const HTTP_UPDATE_ERROR_TEXT = '更新失败';
+
 export const HTTP_DELETE_SUCCESS_TEXT = '删除成功';
+export const HTTP_DELETE_ERROR_TEXT = '删除失败';
 
 
 export const HTTP_NO_USER_TEXT = '该用户不存在，请检查输入的手机号！';
@@ -22,6 +30,7 @@ export const HTTP_LOGIN_SUCCESS_TEXT = '登录成功';
 export const PARAM_MOBILE_REQUIRED = '手机号不能为空';
 export const PARAM_PASSWORD_REQUIRED = '密码不能为空';
 export const PARAM_NAME_REQUIRED = '名称不能为空';
+export const PARAM_NAME_EXIST = '该名称已存在';
 export const PARAM_SORT_NUMBER_TEXT = '排序必须为非0整数';
 export const PARAM_TAG_COLOR_TEXT = '标签颜色不能为空';
 

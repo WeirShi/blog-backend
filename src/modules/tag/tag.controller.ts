@@ -50,7 +50,6 @@ export class TagController {
                 message: error
             });
         }
-        // return this.tagService.findAll();
     }
 
     @Post()
@@ -63,31 +62,36 @@ export class TagController {
                 message: HTTP_ADD_SUCCESS_TEXT
             }
         } catch (error) {
-            throw new BadRequestException({
-                statusCode: 400,
-                data: {},
-                message: error
-            });
+            return error.response;
         }
     }
 
     @Put()
     async changeCategory(@Body() body): Promise<ResponseData<{}>> {
-        await this.tagService.updateOne(body);
-        return {
-            statusCode: 0,
-            data: {},
-            message: HTTP_UPDATE_SUCCESS_TEXT
+        try {
+            await this.tagService.updateOne(body);
+            return {
+                statusCode: 0,
+                data: {},
+                message: HTTP_UPDATE_SUCCESS_TEXT
+            }
+        } catch (error) {
+            return error.response;
         }
+        
     }
 
     @Delete()
     async deleteCategory(@Query('id') id: number): Promise<ResponseData<{}>> {
-        await this.tagService.deleteOne(id);
-        return {
-            statusCode: 0,
-            data: {},
-            message: HTTP_DELETE_SUCCESS_TEXT
+        try {
+            await this.tagService.deleteOne(id);
+            return {
+                statusCode: 0,
+                data: {},
+                message: HTTP_DELETE_SUCCESS_TEXT
+            }
+        } catch (error) {
+            return error.response;
         }
     }
 

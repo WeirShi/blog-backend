@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { Pagination } from 'src/interface/pagination.interface';
 import { Category } from 'src/interface/category.interface';
 import { CategoryDto } from './dto';
-import { HTTP_ERROR_TEXT } from 'src/constants/text.constant';
+import { HTTP_ERROR_TEXT, PARAM_NAME_EXIST } from 'src/constants/text.constant';
 
 @Injectable()
 export class CategoryService {
@@ -31,6 +31,16 @@ export class CategoryService {
 
     async addOne(dto: CategoryDto): Promise<CategoryEntity> {
         const { name, sort } = dto;
+        const res = await this.categoryRepository.findOne({
+            name: name
+        });
+        if (res) {
+            throw new BadRequestException({
+                statusCode: 400,
+                data: {},
+                message: PARAM_NAME_EXIST
+            });
+        }
 
         const category = new CategoryEntity();
         category.name = name;
@@ -53,6 +63,7 @@ export class CategoryService {
         if (!res) {
             throw new BadRequestException({
                 statusCode: 400,
+                data: {},
                 message: HTTP_ERROR_TEXT
             });
         }
@@ -74,6 +85,7 @@ export class CategoryService {
         if (!res) {
             throw new BadRequestException({
                 statusCode: 400,
+                data: {},
                 message: HTTP_ERROR_TEXT
             });
         }

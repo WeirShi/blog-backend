@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { Pagination } from 'src/interface/pagination.interface';
 import { Tag } from 'src/interface/tag.interface';
 import { TagDto } from './dto';
-import { HTTP_ERROR_TEXT } from 'src/constants/text.constant';
+import { HTTP_ERROR_TEXT, PARAM_NAME_EXIST } from 'src/constants/text.constant';
 
 @Injectable()
 export class TagService {
@@ -33,7 +33,16 @@ export class TagService {
 
     async addOne(dto: TagDto): Promise<TagEntity> {
         const { name, sort, color } = dto;
-
+        const res = await this.tagRepository.findOne({
+            name: name
+        });
+        if (res) {
+            throw new BadRequestException({
+                statusCode: 400,
+                data: {},
+                message: PARAM_NAME_EXIST
+            });
+        }
         const tag = new TagEntity();
         tag.name = name;
         tag.sort = sort;

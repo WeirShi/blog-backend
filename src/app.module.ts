@@ -7,6 +7,7 @@ import { Connection } from 'typeorm';
 import { UserModule } from './modules/user/user.module';
 import { CategoryModule } from './modules/category/category.module';
 import { TagModule } from './modules/tag/tag.module';
+import { ArticleModule } from './modules/article/article.module';
 
 
 @Module({
@@ -14,7 +15,8 @@ import { TagModule } from './modules/tag/tag.module';
     TypeOrmModule.forRoot(),
     UserModule,
     CategoryModule,
-    TagModule
+    TagModule,
+    ArticleModule
   ],
   controllers: [AppController]
 })
