@@ -1,4 +1,4 @@
-export interface tag {
+export interface Tag {
     id: number;
     name: string;
     color: string;
@@ -6,4 +6,9 @@ export interface tag {
     create_time?: string;
     update_time?: string;
     is_detele?: number;
+}
+
+export interface ListData {
+    total: number;
+    list: Tag[];
 }

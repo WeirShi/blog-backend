@@ -6,13 +6,15 @@ import { Connection } from 'typeorm';
 
 import { UserModule } from './modules/user/user.module';
 import { CategoryModule } from './modules/category/category.module';
+import { TagModule } from './modules/tag/tag.module';
 
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
     UserModule,
-    CategoryModule
+    CategoryModule,
+    TagModule
   ],
   controllers: [AppController]
 })

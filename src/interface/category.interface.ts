@@ -1,5 +1,3 @@
-import { ResponseData } from './response.interface';
-
 export interface Category {
     id: number;
     name: string;
@@ -9,9 +7,7 @@ export interface Category {
     is_detele?: number;
 }
 
-export interface ListData extends ResponseData {
-    data: {
-        total: number;
-        list: Category[];
-    }
+export interface ListData {
+    total: number;
+    list: Category[];
 }

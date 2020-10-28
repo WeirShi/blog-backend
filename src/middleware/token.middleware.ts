@@ -1,4 +1,4 @@
-import { Injectable, NestMiddleware, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { PRIVATE_KEY } from '../config';
 import { UserData } from '../interface/user.interface';
@@ -18,14 +18,26 @@ export class TokenMiddleware implements NestMiddleware {
           request['user'] = user;
           next();
         } else {
-          throw new UnauthorizedException({ message: HTTP_UNAUTHORIZED_TEXT, statusCode: 20103 });
+          response.send({
+            statusCode: 20103,
+            msg: HTTP_UNAUTHORIZED_TEXT,
+            data: {}
+          });
         }
       } catch (error) {
-        throw new UnauthorizedException({ message: HTTP_UNAUTHORIZED_TEXT, statusCode: 20103 });
+        response.send({
+          statusCode: 20103,
+          msg: HTTP_UNAUTHORIZED_TEXT,
+          data: {}
+        });
       }
      
     } else {
-      throw new UnauthorizedException({ message: HTTP_NEED_TOKEN_TEXT, statusCode: 20103 });
+      response.send({
+        statusCode: 20103,
+        msg: HTTP_NEED_TOKEN_TEXT,
+        data: {}
+      });
     }
   }
 

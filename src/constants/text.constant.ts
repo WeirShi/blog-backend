@@ -23,4 +23,5 @@ export const PARAM_MOBILE_REQUIRED = '手机号不能为空';
 export const PARAM_PASSWORD_REQUIRED = '密码不能为空';
 export const PARAM_NAME_REQUIRED = '名称不能为空';
 export const PARAM_SORT_NUMBER_TEXT = '排序必须为非0整数';
+export const PARAM_TAG_COLOR_TEXT = '标签颜色不能为空';
 

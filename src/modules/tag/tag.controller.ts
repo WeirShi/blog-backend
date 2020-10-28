@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Put, Delete, Query, Body, BadRequestException } from '@nestjs/common';
-import { CategoryService } from './category.service';
+import { TagService } from './tag.service';
 import { Pagination } from 'src/interface/pagination.interface';
-import { ListData } from 'src/interface/category.interface';
+import { ListData } from 'src/interface/tag.interface';
 import { ResponseData } from 'src/interface/response.interface';
 import {
     HTTP_QUERY_SUCCESS_TEXT,
@@ -10,25 +10,26 @@ import {
     HTTP_UPDATE_SUCCESS_TEXT
 } from 'src/constants/text.constant';
 import { dateFmt } from 'src/public/utils/time';
-import { CategoryDto } from './dto';
+import { TagDto } from './dto';
 
 
 
-@Controller('category')
-export class CategoryController {
-    constructor(private readonly categoryService: CategoryService) {}
+@Controller('tag')
+export class TagController {
+    constructor(private readonly tagService: TagService) {}
 
 
     @Get()
     async getCategoryList(@Query() query: Pagination): Promise<ResponseData<ListData>> {
         try {
-            const res = await this.categoryService.pageQuery(query);
+            const res = await this.tagService.pageQuery(query);
             const { total, list } = res;
             const newList = list.map(m => {
                 return {
                     id: m.id,
                     sort: m.sort,
                     name: m.name,
+                    color: m.color,
                     create_time: m.create_time ? dateFmt(m.create_time) : null,
                     update_time: m.update_time ? dateFmt(m.update_time) : null,
                     is_delete: m.is_delete
@@ -49,13 +50,13 @@ export class CategoryController {
                 message: error
             });
         }
-        // return this.categoryService.findAll();
+        // return this.tagService.findAll();
     }
 
     @Post()
-    async addCategory(@Body() body: CategoryDto): Promise<ResponseData<{}>> {
+    async addCategory(@Body() body: TagDto): Promise<ResponseData<{}>> {
         try {
-            await this.categoryService.addOne(body);
+            await this.tagService.addOne(body);
             return {
                 statusCode: 0,
                 data: {},
@@ -72,7 +73,7 @@ export class CategoryController {
 
     @Put()
     async changeCategory(@Body() body): Promise<ResponseData<{}>> {
-        await this.categoryService.updateOne(body);
+        await this.tagService.updateOne(body);
         return {
             statusCode: 0,
             data: {},
@@ -82,7 +83,7 @@ export class CategoryController {
 
     @Delete()
     async deleteCategory(@Query('id') id: number): Promise<ResponseData<{}>> {
-        await this.categoryService.deleteOne(id);
+        await this.tagService.deleteOne(id);
         return {
             statusCode: 0,
             data: {},

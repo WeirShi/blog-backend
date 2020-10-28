@@ -2,7 +2,7 @@ import {
   Controller, Get, Post, Body, Req,
   NotFoundException, BadRequestException
 } from '@nestjs/common';
-import { LoginData } from 'src/interface/user.interface';
+import { UserData } from 'src/interface/user.interface';
 import { ResponseData } from 'src/interface/response.interface';
 import { UserDto } from './dto';
 import { UserService } from './user.service';
@@ -27,7 +27,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
     @Post('login')
-    async login(@Body() userDto: UserDto): Promise<LoginData> {
+    async login(@Body() userDto: UserDto): Promise<ResponseData<UserData>> {
       const user = await this.userService.findOne(userDto);
       if (!user) {
         throw new NotFoundException({
@@ -51,16 +51,18 @@ export class UserController {
 
 
     @Post('regist')
-    async regist(@Body() userDto: UserDto): Promise<ResponseData> {
+    async regist(@Body() userDto: UserDto): Promise<ResponseData<{}>> {
       try {
         await this.userService.createOne(userDto);
         return {
           message: HTTP_REGIST_SUCCESS_TEXT,
+          data: {},
           statusCode: 0
         }
       } catch (error) {
         throw new BadRequestException({
           statusCode: 400,
+          data: {},
           message: error
         });
       }
@@ -68,7 +70,7 @@ export class UserController {
 
     
     @Get('user')
-    async getUser(@Req() request: Request): Promise<LoginData | ResponseData> {
+    async getUser(@Req() request: Request): Promise<ResponseData<UserData>> {
       const user = request['user'];
       try {
         const res = await this.userService.findById(user.id);
@@ -86,6 +88,7 @@ export class UserController {
       } catch (error) {
         throw new BadRequestException({
           statusCode: 400,
+          data: {},
           message: error
         });
       }
