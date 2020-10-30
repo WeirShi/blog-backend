@@ -23,21 +23,21 @@ export class ArticleService {
         
         const qb = this.articleRepository.createQueryBuilder('article');
         if (type === 0) {
-            qb.where(`is_delete=0`)
+            qb.where(`article.is_delete=0`)
                 .andWhere(`is_drafts=0`)
         }
         if (type === 1) {
-            qb.where(`is_delete=0`)
+            qb.where(`article.is_delete=0`)
                 .andWhere(`is_drafts=1`)
                 .andWhere(`is_publish=0`)
         }
         if (type === 2) {
-            qb.where(`is_delete=1`)
+            qb.where(`article.is_delete=1`)
         }
-        qb
-            .skip(pageSize * (current - 1))
+        qb.skip(pageSize * (current - 1))
             .take(pageSize)
-            .orderBy('create_time', 'DESC')
+            .leftJoinAndSelect('article.categories', 'categories')
+            .leftJoinAndSelect('article.tags', 'tags')
 
         const [ list, total ] = await qb.getManyAndCount();
         
@@ -89,7 +89,6 @@ export class ArticleService {
 
     async addOne(dto: ArticleDto) {
         const { title, content, cover, is_publish, is_delete, is_drafts, tags, categories } = dto;
-        console.log('dto', dto);
         const article = new ArticleEntity();
         article.title = title;
         article.content = content;
@@ -133,10 +132,6 @@ export class ArticleService {
     }
 
     async getOne(id: number): Promise<Article> {
-        // const res = await this.articleRepository.findOne({
-        //     id: id,
-        //     is_delete: 0
-        // });
         const qb = this.articleRepository.createQueryBuilder('article');
         qb.where(`article.is_delete=0`)
             .andWhere(`article.id=${id}`)
