@@ -17,10 +17,11 @@ export class CategoryService {
 
     async pageQuery ({ pageSize, current }: Pagination): Promise<{ total: number, list: Category[] }> {
         const qb = this.categoryRepository.createQueryBuilder('category');
-        qb.where(`is_delete=0`)
+        qb.where(`category.is_delete=0`)
             .skip(pageSize * (current - 1))
             .take(pageSize)
-            .orderBy('sort', 'DESC')
+            .leftJoinAndSelect('category.articles', 'article')
+            .orderBy('category.sort', 'DESC')
 
         const [ list, total] = await qb.getManyAndCount();
         const newList = list.map(m => {

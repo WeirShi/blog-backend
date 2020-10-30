@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
+import { ArticleEntity } from '../article/article.entity';
 
 
 @Entity('tag')
@@ -27,5 +28,8 @@ export class TagEntity {
         default: null
     })
     update_time: Date;
+    
+    @ManyToMany(() => ArticleEntity, article => article.tags)
+    articles: ArticleEntity[];
 
 }

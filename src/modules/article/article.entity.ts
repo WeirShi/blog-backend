@@ -62,11 +62,11 @@ export class ArticleEntity {
     })
     publish_time: Date;
 
-    @ManyToMany(() => TagEntity)
+    @ManyToMany(() => TagEntity, tag => tag.articles)
     @JoinTable()
     tags: TagEntity[];
 
-    @ManyToMany(() => CategoryEntity)
+    @ManyToMany(() => CategoryEntity, category => category.articles)
     @JoinTable()
     categories: CategoryEntity[];
 

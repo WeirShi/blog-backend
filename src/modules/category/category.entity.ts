@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
+import { ArticleEntity } from '../article/article.entity';
 
 @Entity('category')
 export class CategoryEntity {
@@ -23,5 +24,8 @@ export class CategoryEntity {
         default: null
     })
     update_time: Date;
+
+    @ManyToMany(() => ArticleEntity, article => article.categories)
+    articles: ArticleEntity[];
 
 }

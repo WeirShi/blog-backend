@@ -29,6 +29,7 @@ export class TagController {
                 message: HTTP_QUERY_SUCCESS_TEXT
             }
         } catch (error) {
+            console.log(error);
             throw new BadRequestException({
                 statusCode: 400,
                 data: {},

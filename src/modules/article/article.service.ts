@@ -38,6 +38,7 @@ export class ArticleService {
             .take(pageSize)
             .leftJoinAndSelect('article.categories', 'categories')
             .leftJoinAndSelect('article.tags', 'tags')
+            .orderBy('article.create_time', 'DESC')
 
         const [ list, total ] = await qb.getManyAndCount();
         

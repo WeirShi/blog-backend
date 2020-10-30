@@ -19,10 +19,12 @@ export class TagService {
 
     async pageQuery ({ pageSize, current }: Pagination): Promise<{ total: number, list: Tag[] }> {
         const qb = this.tagRepository.createQueryBuilder('tag');
-        qb.where(`is_delete=0`)
+        qb
+            .where(`tag.is_delete=0`)
             .skip(pageSize * (current - 1))
             .take(pageSize)
-            .orderBy('sort', 'DESC')
+            .leftJoinAndSelect('tag.articles', 'article')
+            .orderBy('tag.sort', 'DESC')
 
         const [ list, total] = await qb.getManyAndCount();
         const newList = list.map(m => {
