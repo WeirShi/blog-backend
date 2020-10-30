@@ -1,5 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
+
 @Entity('tag')
 export class TagEntity {
     @PrimaryGeneratedColumn()
@@ -26,4 +27,5 @@ export class TagEntity {
         default: null
     })
     update_time: Date;
+
 }

@@ -9,7 +9,6 @@ import {
     HTTP_DELETE_SUCCESS_TEXT,
     HTTP_UPDATE_SUCCESS_TEXT
 } from 'src/constants/text.constant';
-import { dateFmt } from 'src/public/utils/time';
 import { CategoryDto } from './dto';
 
 
@@ -23,23 +22,9 @@ export class CategoryController {
     async getCategoryList(@Query() query: Pagination): Promise<ResponseData<ListData>> {
         try {
             const res = await this.categoryService.pageQuery(query);
-            const { total, list } = res;
-            const newList = list.map(m => {
-                return {
-                    id: m.id,
-                    sort: m.sort,
-                    name: m.name,
-                    create_time: m.create_time ? dateFmt(m.create_time) : null,
-                    update_time: m.update_time ? dateFmt(m.update_time) : null,
-                    is_delete: m.is_delete
-                }
-            });
             return {
                 statusCode: 0,
-                data: {
-                    total,
-                    list: newList
-                },
+                data: res,
                 message: HTTP_QUERY_SUCCESS_TEXT
             }
         } catch (error) {

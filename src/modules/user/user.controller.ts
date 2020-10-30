@@ -1,6 +1,5 @@
 import {
-  Controller, Get, Post, Body, Req,
-  NotFoundException, BadRequestException
+  Controller, Get, Post, Body, Req, NotFoundException
 } from '@nestjs/common';
 import { UserData } from 'src/interface/user.interface';
 import { ResponseData } from 'src/interface/response.interface';
@@ -60,11 +59,7 @@ export class UserController {
           statusCode: 0
         }
       } catch (error) {
-        throw new BadRequestException({
-          statusCode: 400,
-          data: {},
-          message: error
-        });
+        return error.response;
       }
     }
 
@@ -86,11 +81,7 @@ export class UserController {
           message: HTTP_QUERY_SUCCESS_TEXT
         }
       } catch (error) {
-        throw new BadRequestException({
-          statusCode: 400,
-          data: {},
-          message: error
-        });
+        return error.response;
       }
     }
 }

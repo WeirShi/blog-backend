@@ -10,7 +10,6 @@ import {
 } from 'src/constants/text.constant';
 import { ResponseData } from 'src/interface/response.interface';
 import { ListData, ArticlePage, Article } from 'src/interface/article.interface';
-import { dateFmt } from 'src/public/utils/time'
 import { ArticleDto } from './dto';
 
 
@@ -27,30 +26,17 @@ export class ArticleController {
                 current: Number(current),
                 type: Number(type)
             });
-            const { total, list } = res;
-            const newList = list.map(m => {
-                return {
-                    id: m.id,
-                    title: m.title,
-                    content: m.content,
-                    cover: m.cover,
-                    is_delete: m.is_delete,
-                    is_publish: m.is_publish,
-                    is_drafts: m.is_drafts,
-                    create_time: m.create_time ? dateFmt(m.create_time) : null,
-                    update_time: m.update_time ? dateFmt(m.update_time) : null,
-                    publish_time: m.publish_time ? dateFmt(m.publish_time) : null
-                }
-            });
+            const { total, list} = res;
             return {
                 message: HTTP_QUERY_SUCCESS_TEXT,
                 data: {
                     total,
-                    list: newList
+                    list
                 },
                 statusCode: 0
             }
         } catch (error) {
+            console.log('error', error);
             throw new BadRequestException({
                 message: HTTP_QUERY_ERROR_TEXT,
                 statusCode: 400,
@@ -97,25 +83,19 @@ export class ArticleController {
     async getDetail(@Query('id') id: number): Promise<ResponseData<Article>> {
         try {
             const res = await this.articleService.getOne(id);
-            const { create_time, update_time, publish_time, ...others } = res;
-            const article = {
-                create_time: create_time ? dateFmt(create_time) : null,
-                update_time: update_time ? dateFmt(update_time) : null,
-                publish_time: publish_time ? dateFmt(publish_time) : null,
-                ...others
-            }
             return {
                 statusCode: 0,
-                data: article,
+                data: res,
                 message: HTTP_QUERY_SUCCESS_TEXT
             }
         } catch (error) {
+            console.log(error);
             return error.response;
         }
     }
 
     @Put()
-    async updateArticle(@Body() body: Article): Promise<ResponseData<{}>> {
+    async updateArticle(@Body() body: ArticleDto): Promise<ResponseData<{}>> {
         try {
             await this.articleService.updateOne(body);
             return {

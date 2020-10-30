@@ -1,9 +1,9 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserDto } from './dto';
 import { UserEntity } from './user.entity';
-import { HTTP_USER_EXIST_TEXT } from 'src/constants/text.constant';
+import { HTTP_NO_USER_TEXT, HTTP_USER_EXIST_TEXT } from 'src/constants/text.constant';
 import { UserData } from 'src/interface/user.interface';
 
 import * as argon2 from 'argon2';
@@ -35,15 +35,22 @@ export class UserService {
         if (user) {
             return user;
         }
-        return null;
+        throw new BadRequestException({
+            statusCode: 400,
+            data: {},
+            message: HTTP_NO_USER_TEXT
+        });
     }
 
 
     async createOne({ mobile, password }: UserDto): Promise<UserData> {
         const user = await this.userRepository.findOne({ mobile });
-        console.log('user', user);
         if (user) {
-            throw new HttpException({ message: HTTP_USER_EXIST_TEXT }, HttpStatus.BAD_REQUEST);
+            throw new BadRequestException({
+                statusCode: 400,
+                data: {},
+                message: HTTP_USER_EXIST_TEXT
+            });
         }
 
         const newUser = new UserEntity();
@@ -51,9 +58,7 @@ export class UserService {
         newUser.password = password;
         newUser.create_time = new Date();
 
-        console.log('newUser', newUser);
         const savedUser = await this.userRepository.save(newUser);
-        console.log('savedUser', savedUser);
         return this.buildUserData(savedUser);
     }
 

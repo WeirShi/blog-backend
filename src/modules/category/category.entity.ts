@@ -23,4 +23,5 @@ export class CategoryEntity {
         default: null
     })
     update_time: Date;
+
 }

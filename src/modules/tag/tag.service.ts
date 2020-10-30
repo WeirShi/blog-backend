@@ -6,6 +6,7 @@ import { Pagination } from 'src/interface/pagination.interface';
 import { Tag } from 'src/interface/tag.interface';
 import { TagDto } from './dto';
 import { HTTP_ERROR_TEXT, PARAM_NAME_EXIST } from 'src/constants/text.constant';
+import { dateFmt } from 'src/public/utils/time';
 
 @Injectable()
 export class TagService {
@@ -16,7 +17,7 @@ export class TagService {
     
 
 
-    async pageQuery ({ pageSize, current }: Pagination): Promise<{ total: number, list: TagEntity[] }> {
+    async pageQuery ({ pageSize, current }: Pagination): Promise<{ total: number, list: Tag[] }> {
         const qb = this.tagRepository.createQueryBuilder('tag');
         qb.where(`is_delete=0`)
             .skip(pageSize * (current - 1))
@@ -24,9 +25,17 @@ export class TagService {
             .orderBy('sort', 'DESC')
 
         const [ list, total] = await qb.getManyAndCount();
+        const newList = list.map(m => {
+            const { create_time, update_time, ...others } = m;
+            return {
+                ...others,
+                create_time: create_time ? dateFmt(create_time) : null,
+                update_time: update_time ? dateFmt(update_time) : null
+            }
+        });
         return {
             total,
-            list
+            list: newList
         }
     }
 

@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
+import { TagEntity } from '../tag/tag.entity';
+import { CategoryEntity } from '../category/category.entity';
 
 
 @Entity('article')
@@ -59,4 +61,13 @@ export class ArticleEntity {
         default: null
     })
     publish_time: Date;
+
+    @ManyToMany(() => TagEntity)
+    @JoinTable()
+    tags: TagEntity[];
+
+    @ManyToMany(() => CategoryEntity)
+    @JoinTable()
+    categories: CategoryEntity[];
+
 }
