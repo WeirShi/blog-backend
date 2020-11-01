@@ -35,6 +35,11 @@ export class ArticleEntity {
     @Column({
         default: 0
     })
+    like_times: number;
+
+    @Column({
+        default: 0
+    })
     is_publish: number;
 
     @Column({

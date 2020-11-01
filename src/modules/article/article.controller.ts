@@ -36,7 +36,6 @@ export class ArticleController {
                 statusCode: 0
             }
         } catch (error) {
-            console.log('error', error);
             throw new BadRequestException({
                 message: HTTP_QUERY_ERROR_TEXT,
                 statusCode: 400,
@@ -79,6 +78,20 @@ export class ArticleController {
         }
     }
 
+    @Put('article')
+    async updateArticle(@Body() body: ArticleDto): Promise<ResponseData<{}>> {
+        try {
+            await this.articleService.updateOne(body);
+            return {
+                statusCode: 0,
+                data: {},
+                message: HTTP_UPDATE_SUCCESS_TEXT
+            }
+        } catch (error) {
+            return error.response;
+        }
+    }
+
     @Get('article/detail')
     async getDetail(@Query('id') id: number): Promise<ResponseData<Article>> {
         try {
@@ -90,20 +103,6 @@ export class ArticleController {
             }
         } catch (error) {
             console.log(error);
-            return error.response;
-        }
-    }
-
-    @Put('article')
-    async updateArticle(@Body() body: ArticleDto): Promise<ResponseData<{}>> {
-        try {
-            await this.articleService.updateOne(body);
-            return {
-                statusCode: 0,
-                data: {},
-                message: HTTP_UPDATE_SUCCESS_TEXT
-            }
-        } catch (error) {
             return error.response;
         }
     }
@@ -153,10 +152,51 @@ export class ArticleController {
         }
     }
 
-    @Put('blog/article/times/add')
-    async addArticleWatchTimes(@Body('id') id: number): Promise<ResponseData<{}>> {
+    // blog 前台相关API
+    @Get('blog/article/list')
+    async getArticleListForBlog(@Query() query: ArticlePage): Promise<ResponseData<ListData>> {
+        const { pageSize, current } = query;
         try {
-            await this.articleService.addWatchTime(id);
+            const res = await this.articleService.pageQueryForBlog({
+                pageSize: Number(pageSize),
+                current: Number(current)
+            });
+            const { total, list} = res;
+            return {
+                message: HTTP_QUERY_SUCCESS_TEXT,
+                data: {
+                    total,
+                    list
+                },
+                statusCode: 0
+            }
+        } catch (error) {
+            throw new BadRequestException({
+                message: HTTP_QUERY_ERROR_TEXT,
+                statusCode: 400,
+                data: {}
+            });
+        }
+    }
+
+    @Get('blog/article/detail')
+    async getArticleDetailForBlog(@Query('id') id: number): Promise<ResponseData<Article>> {
+        try {
+            const res = await this.articleService.getOne(id);
+            return {
+                statusCode: 0,
+                data: res,
+                message: HTTP_QUERY_SUCCESS_TEXT
+            }
+        } catch (error) {
+            return error.response;
+        }
+    }
+
+    @Put('blog/article/like')
+    async likeArticleForBlog(@Body('id') id: number, @Body('is_like') isLike: number): Promise<ResponseData<{}>> {
+        try {
+            await this.articleService.addLikeTimes(id, isLike);
             return {
                 statusCode: 0,
                 message: HTTP_UPDATE_SUCCESS_TEXT,
@@ -167,19 +207,18 @@ export class ArticleController {
         }
     }
 
-    @Get('blog/article/list')
-    async getArticleListForBlog() {
-        return 'list for blog';
-    }
-
-    @Get('blog/article/detail')
-    async getArticleDetailForBlog() {
-        return 'blog article detail';
-    }
-
-    @Put('blog/article/like')
-    async likeArticleForBlog() {
-        return 'blog article like';
+    @Put('blog/article/watchtimes/add')
+    async addArticleWatchTimes(@Body('id') id: number): Promise<ResponseData<{}>> {
+        try {
+            await this.articleService.addWatchTimes(id);
+            return {
+                statusCode: 0,
+                message: HTTP_UPDATE_SUCCESS_TEXT,
+                data: {}
+            }
+        } catch (error) {
+            return error.response;
+        }
     }
 
 }

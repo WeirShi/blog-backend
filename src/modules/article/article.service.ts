@@ -245,10 +245,40 @@ export class ArticleService {
     }
 
     // blog 前台相关
+    async pageQueryForBlog ({ pageSize, current }: ArticlePage): Promise<{ total: number; list: Article[] }> {
+        const qb = this.articleRepository.createQueryBuilder('article');
+        qb.where('article.is_delete=0')
+            .andWhere('article.is_publish=1')
+            .andWhere('article.is_drafts=0')
+            .skip(pageSize * (current - 1))
+            .take(pageSize)
+            .leftJoinAndSelect('article.categories', 'categories')
+            .leftJoinAndSelect('article.tags', 'tags')
+            .orderBy('article.create_time', 'DESC')
+
+        const [ list, total ] = await qb.getManyAndCount();
+        
+        const newList = list.map(m => {
+            const { create_time, update_time, publish_time, ...others } = m;
+            return {
+                ...others,
+                create_time: create_time ? dateFmt(create_time) : null,
+                update_time: update_time ? dateFmt(update_time) : null,
+                publish_time: publish_time ? dateFmt(publish_time) : null
+            }
+        });
+        return {
+            total,
+            list: newList
+        }
+    }
+
     // 新增观看次数
-    async addWatchTime(id: number): Promise<ArticleEntity> {
+    async addWatchTimes(id: number): Promise<ArticleEntity> {
         const res = await this.articleRepository.findOne({
-            id: id
+            id: id,
+            is_delete: 0,
+            is_publish: 1
         });
         if (!res) {
             throw new BadRequestException({
@@ -257,7 +287,28 @@ export class ArticleService {
                 data: {}
             });
         }
-        res.watch_times++;
+        res.watch_times+=1;
+        res.update_time = new Date();
+        const article = Object.assign({}, res);
+        const savedArticle = await this.articleRepository.save(article);
+        return savedArticle;
+    }
+
+    // 新增点赞次数
+    async addLikeTimes(id: number, isLike: number): Promise<ArticleEntity> {
+        const res = await this.articleRepository.findOne({
+            id: id,
+            is_delete: 0,
+            is_publish: 1
+        });
+        if (!res) {
+            throw new BadRequestException({
+                message: HTTP_UPDATE_ERROR_TEXT,
+                statusCode: 400,
+                data: {}
+            });
+        }
+        isLike === 1 ? res.like_times+=1 : res.like_times-=1;
         res.update_time = new Date();
         const article = Object.assign({}, res);
         const savedArticle = await this.articleRepository.save(article);

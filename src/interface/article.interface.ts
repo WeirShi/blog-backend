@@ -18,6 +18,6 @@ export interface ListData {
 }
 
 export interface ArticlePage extends Pagination {
-    type: number;
+    type?: number;
 }
 
