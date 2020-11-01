@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Put, Delete, Query, Body, BadRequestException } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { Pagination } from 'src/interface/pagination.interface';
-import { ListData } from 'src/interface/category.interface';
+import { ListData, Category } from 'src/interface/category.interface';
 import { ResponseData } from 'src/interface/response.interface';
 import {
     HTTP_QUERY_SUCCESS_TEXT,
@@ -13,12 +13,12 @@ import { CategoryDto } from './dto';
 
 
 
-@Controller('category')
+@Controller()
 export class CategoryController {
     constructor(private readonly categoryService: CategoryService) {}
 
 
-    @Get()
+    @Get('category')
     async getCategoryList(@Query() query: Pagination): Promise<ResponseData<ListData>> {
         try {
             const res = await this.categoryService.pageQuery(query);
@@ -34,10 +34,27 @@ export class CategoryController {
                 message: error
             });
         }
-        // return this.categoryService.findAll();
     }
 
-    @Post()
+    @Get('category/all')
+    async getAll(): Promise<ResponseData<Category[]>> {
+        try {
+            const res = await this.categoryService.getAll();
+            return {
+                statusCode: 0,
+                data: res,
+                message: HTTP_QUERY_SUCCESS_TEXT
+            }
+        } catch (error) {
+            throw new BadRequestException({
+                statusCode: 400,
+                data: {},
+                message: error
+            });
+        }
+    }
+
+    @Post('category')
     async addCategory(@Body() body: CategoryDto): Promise<ResponseData<{}>> {
         try {
             await this.categoryService.addOne(body);
@@ -51,7 +68,7 @@ export class CategoryController {
         }
     }
 
-    @Put()
+    @Put('category')
     async changeCategory(@Body() body): Promise<ResponseData<{}>> {
         try {
             await this.categoryService.updateOne(body);
@@ -66,7 +83,7 @@ export class CategoryController {
         
     }
 
-    @Delete()
+    @Delete('category')
     async deleteCategory(@Query('id') id: number): Promise<ResponseData<{}>> {
         try {
             await this.categoryService.deleteOne(id);

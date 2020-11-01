@@ -244,4 +244,23 @@ export class ArticleService {
         return savedArticle;
     }
 
+    // blog 前台相关
+    // 新增观看次数
+    async addWatchTime(id: number): Promise<ArticleEntity> {
+        const res = await this.articleRepository.findOne({
+            id: id
+        });
+        if (!res) {
+            throw new BadRequestException({
+                message: HTTP_UPDATE_ERROR_TEXT,
+                statusCode: 400,
+                data: {}
+            });
+        }
+        res.watch_times++;
+        res.update_time = new Date();
+        const article = Object.assign({}, res);
+        const savedArticle = await this.articleRepository.save(article);
+        return savedArticle;
+    }
 }

@@ -13,11 +13,11 @@ import { ListData, ArticlePage, Article } from 'src/interface/article.interface'
 import { ArticleDto } from './dto';
 
 
-@Controller('article')
+@Controller()
 export class ArticleController {
     constructor(private readonly articleService: ArticleService) {}
 
-    @Get()
+    @Get('article')
     async getList(@Query() query: ArticlePage): Promise<ResponseData<ListData>> {
         const { pageSize, current, type } = query;
         try {
@@ -46,7 +46,7 @@ export class ArticleController {
     }
 
 
-    @Post()
+    @Post('article')
     async addArticle(@Body() body: ArticleDto): Promise<ResponseData<{}>> {
         try {
             await this.articleService.addOne(body);
@@ -65,7 +65,7 @@ export class ArticleController {
     }
 
 
-    @Delete()
+    @Delete('article')
     async deleteArticle(@Query('id') id: number): Promise<ResponseData<{}>> {
         try {
             await this.articleService.deleteOne(id);
@@ -79,7 +79,7 @@ export class ArticleController {
         }
     }
 
-    @Get('detail')
+    @Get('article/detail')
     async getDetail(@Query('id') id: number): Promise<ResponseData<Article>> {
         try {
             const res = await this.articleService.getOne(id);
@@ -94,7 +94,7 @@ export class ArticleController {
         }
     }
 
-    @Put()
+    @Put('article')
     async updateArticle(@Body() body: ArticleDto): Promise<ResponseData<{}>> {
         try {
             await this.articleService.updateOne(body);
@@ -108,7 +108,7 @@ export class ArticleController {
         }
     }
 
-    @Put('publish')
+    @Put('article/publish')
     async publishArticle(
         @Body('id') id: number,
         @Body('is_publish') isPublish: number
@@ -125,7 +125,7 @@ export class ArticleController {
         }
     }
 
-    @Put('drafts')
+    @Put('article/drafts')
     async saveArticleToDrafts(@Body('id') id: number): Promise<ResponseData<{}>> {
         try {
             await this.articleService.updateDrafts(id);
@@ -139,7 +139,7 @@ export class ArticleController {
         }
     }
 
-    @Put('list')
+    @Put('article/list')
     async saveArticleToList(@Body('id') id: number): Promise<ResponseData<{}>> {
         try {
             await this.articleService.updateList(id);
@@ -151,6 +151,35 @@ export class ArticleController {
         } catch (error) {
             return error.response;
         }
+    }
+
+    @Put('blog/article/times/add')
+    async addArticleWatchTimes(@Body('id') id: number): Promise<ResponseData<{}>> {
+        try {
+            await this.articleService.addWatchTime(id);
+            return {
+                statusCode: 0,
+                message: HTTP_UPDATE_SUCCESS_TEXT,
+                data: {}
+            }
+        } catch (error) {
+            return error.response;
+        }
+    }
+
+    @Get('blog/article/list')
+    async getArticleListForBlog() {
+        return 'list for blog';
+    }
+
+    @Get('blog/article/detail')
+    async getArticleDetailForBlog() {
+        return 'blog article detail';
+    }
+
+    @Put('blog/article/like')
+    async likeArticleForBlog() {
+        return 'blog article like';
     }
 
 }

@@ -1,4 +1,4 @@
-import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ArticleEntity } from './article.entity';
 import { TokenMiddleware } from 'src/middleware/token.middleware';
@@ -17,6 +17,7 @@ export class ArticleModule implements NestModule{
     configure(consumer: MiddlewareConsumer) {
         consumer
             .apply(TokenMiddleware)
+            .exclude({ path: 'blog/article/*', method: RequestMethod.ALL })
             .forRoutes(ArticleController)
     }
 }

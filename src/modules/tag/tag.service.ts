@@ -16,11 +16,10 @@ export class TagService {
     ) {}
     
 
-
+    // 分页查找
     async pageQuery ({ pageSize, current }: Pagination): Promise<{ total: number, list: Tag[] }> {
         const qb = this.tagRepository.createQueryBuilder('tag');
-        qb
-            .where(`tag.is_delete=0`)
+        qb.where(`tag.is_delete=0`)
             .skip(pageSize * (current - 1))
             .take(pageSize)
             .leftJoinAndSelect('tag.articles', 'article')
@@ -39,6 +38,26 @@ export class TagService {
             total,
             list: newList
         }
+    }
+
+    // 查询全部
+    async getAll(): Promise<Tag[]>{
+        const qb = this.tagRepository.createQueryBuilder('tag');
+        qb.where(`tag.is_delete=0`)
+            .leftJoinAndSelect('tag.articles', 'article')
+            .orderBy('tag.sort', 'DESC')
+            .addOrderBy('tag.create_time', 'DESC')
+        const res = await qb.getMany();
+        const newList = res.map(m => {
+            const { create_time, update_time, ...others } = m;
+            return {
+                ...others,
+                create_time: create_time ? dateFmt(create_time) : null,
+                update_time: update_time ? dateFmt(update_time) : null
+            }
+        });
+
+        return newList;
     }
 
 

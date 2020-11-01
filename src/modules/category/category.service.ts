@@ -38,6 +38,24 @@ export class CategoryService {
         }
     }
 
+    async getAll(): Promise<Category[]> {
+        const qb = this.categoryRepository.createQueryBuilder('category');
+        qb.where(`category.is_delete=0`)
+            .leftJoinAndSelect('category.articles', 'article')
+            .orderBy('category.sort', 'DESC')
+            .addOrderBy('category.create_time', 'DESC')
+        const list = await qb.getMany();
+        const newList = list.map(m => {
+            const {create_time, update_time, ...others} = m;
+            return {
+                ...others,
+                create_time: create_time ? dateFmt(create_time) : null,
+                update_time: update_time ? dateFmt(update_time) : null
+            }
+        });
+
+        return newList;
+    }
 
     async addOne(dto: CategoryDto): Promise<CategoryEntity> {
         const { name, sort } = dto;

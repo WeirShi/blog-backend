@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Put, Delete, Query, Body, BadRequestException } from '@nestjs/common';
 import { TagService } from './tag.service';
 import { Pagination } from 'src/interface/pagination.interface';
-import { ListData } from 'src/interface/tag.interface';
+import { ListData, Tag } from 'src/interface/tag.interface';
 import { ResponseData } from 'src/interface/response.interface';
 import {
     HTTP_QUERY_SUCCESS_TEXT,
@@ -12,24 +12,21 @@ import {
 import { TagDto } from './dto';
 
 
-
-@Controller('tag')
+@Controller()
 export class TagController {
     constructor(private readonly tagService: TagService) {}
 
 
-    @Get()
-    async getCategoryList(@Query() query: Pagination): Promise<ResponseData<ListData>> {
+    @Get('tag')
+    async getTagList(@Query() query: Pagination): Promise<ResponseData<ListData>> {
         try {
             const res = await this.tagService.pageQuery(query);
-            
             return {
                 statusCode: 0,
                 data: res,
                 message: HTTP_QUERY_SUCCESS_TEXT
             }
         } catch (error) {
-            console.log(error);
             throw new BadRequestException({
                 statusCode: 400,
                 data: {},
@@ -38,8 +35,8 @@ export class TagController {
         }
     }
 
-    @Post()
-    async addCategory(@Body() body: TagDto): Promise<ResponseData<{}>> {
+    @Post('tag')
+    async addTag(@Body() body: TagDto): Promise<ResponseData<{}>> {
         try {
             await this.tagService.addOne(body);
             return {
@@ -52,8 +49,8 @@ export class TagController {
         }
     }
 
-    @Put()
-    async changeCategory(@Body() body): Promise<ResponseData<{}>> {
+    @Put('tag')
+    async changeTag(@Body() body): Promise<ResponseData<{}>> {
         try {
             await this.tagService.updateOne(body);
             return {
@@ -67,8 +64,8 @@ export class TagController {
         
     }
 
-    @Delete()
-    async deleteCategory(@Query('id') id: number): Promise<ResponseData<{}>> {
+    @Delete('tag')
+    async deleteTag(@Query('id') id: number): Promise<ResponseData<{}>> {
         try {
             await this.tagService.deleteOne(id);
             return {
@@ -78,6 +75,24 @@ export class TagController {
             }
         } catch (error) {
             return error.response;
+        }
+    }
+
+    @Get('tag/all')
+    async getAllTag(): Promise<ResponseData<Tag[]>> {
+        try {
+            const res = await this.tagService.getAll();
+            return {
+                statusCode: 0,
+                data: res,
+                message: HTTP_QUERY_SUCCESS_TEXT
+            }
+        } catch (error) {
+            throw new BadRequestException({
+                statusCode: 400,
+                data: {},
+                message: error
+            });
         }
     }
 
