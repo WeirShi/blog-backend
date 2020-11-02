@@ -1,4 +1,4 @@
-import { Module, NestModule, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TagEntity } from './tag.entity';
 import { TagService } from './tag.service';
@@ -16,7 +16,9 @@ export class TagModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
         consumer
           .apply(TokenMiddleware)
-          .exclude({ path: 'blog/tag/*', method: RequestMethod.ALL })
+          .exclude(
+              'blog/tag/(.*)'
+          )
           .forRoutes(TagController)
       }
 }

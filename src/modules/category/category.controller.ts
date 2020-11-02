@@ -96,4 +96,23 @@ export class CategoryController {
             return error.response;
         }
     }
+
+    @Get('blog/category/all')
+    async getAllForBlog(): Promise<ResponseData<Category[]>> {
+        try {
+            const res = await this.categoryService.getAll();
+            return {
+                statusCode: 0,
+                data: res,
+                message: HTTP_QUERY_SUCCESS_TEXT
+            }
+        } catch (error) {
+            throw new BadRequestException({
+                statusCode: 400,
+                data: {},
+                message: error
+            });
+        }
+    }
+
 }

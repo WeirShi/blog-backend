@@ -25,9 +25,10 @@ export class CategoryService {
 
         const [ list, total] = await qb.getManyAndCount();
         const newList = list.map(m => {
-            const {create_time, update_time, ...others} = m;
+            const {create_time, update_time, articles, ...others} = m;
             return {
                 ...others,
+                article_count: articles.length,
                 create_time: create_time ? dateFmt(create_time) : null,
                 update_time: update_time ? dateFmt(update_time) : null
             }
@@ -44,11 +45,13 @@ export class CategoryService {
             .leftJoinAndSelect('category.articles', 'article')
             .orderBy('category.sort', 'DESC')
             .addOrderBy('category.create_time', 'DESC')
+            .printSql()
         const list = await qb.getMany();
         const newList = list.map(m => {
-            const {create_time, update_time, ...others} = m;
+            const {create_time, update_time, articles, ...others} = m;
             return {
                 ...others,
+                article_count: articles.length,
                 create_time: create_time ? dateFmt(create_time) : null,
                 update_time: update_time ? dateFmt(update_time) : null
             }

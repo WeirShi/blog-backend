@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { Pagination } from 'src/interface/pagination.interface';
 import { Tag } from 'src/interface/tag.interface';
 import { TagDto } from './dto';
-import { HTTP_ERROR_TEXT, PARAM_NAME_EXIST } from 'src/constants/text.constant';
+import { HTTP_ERROR_TEXT, PARAM_NAME_EXIST, HTTP_QUERY_ERROR_TEXT } from 'src/constants/text.constant';
 import { dateFmt } from 'src/public/utils/time';
 
 @Injectable()
@@ -27,9 +27,10 @@ export class TagService {
 
         const [ list, total] = await qb.getManyAndCount();
         const newList = list.map(m => {
-            const { create_time, update_time, ...others } = m;
+            const { create_time, update_time, articles, ...others } = m;
             return {
                 ...others,
+                article_count: articles.length,
                 create_time: create_time ? dateFmt(create_time) : null,
                 update_time: update_time ? dateFmt(update_time) : null
             }
@@ -48,10 +49,18 @@ export class TagService {
             .orderBy('tag.sort', 'DESC')
             .addOrderBy('tag.create_time', 'DESC')
         const res = await qb.getMany();
+        if (!res) {
+            throw new BadRequestException({
+                statusCode: 400,
+                message: HTTP_QUERY_ERROR_TEXT,
+                data: {}
+            })
+        }
         const newList = res.map(m => {
-            const { create_time, update_time, ...others } = m;
+            const { create_time, update_time, articles, ...others } = m;
             return {
                 ...others,
+                article_count: articles.length,
                 create_time: create_time ? dateFmt(create_time) : null,
                 update_time: update_time ? dateFmt(update_time) : null
             }

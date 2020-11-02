@@ -96,4 +96,17 @@ export class TagController {
         }
     }
 
+    @Get('blog/tag/all')
+    async getAllTagForBlog(): Promise<ResponseData<Tag[]>> {
+        try {
+            const res = await this.tagService.getAll();
+            return {
+                statusCode: 0,
+                data: res,
+                message: HTTP_QUERY_SUCCESS_TEXT
+            }
+        } catch (error) {
+            return error.response;
+        }
+    }
 }
