@@ -14,8 +14,7 @@ import { PRIVATE_KEY, EXPIRESD } from 'src/config';
 @Injectable()
 export class UserService {
     constructor(
-        @InjectRepository(UserEntity)
-        private readonly userRepository: Repository<UserEntity>
+        @InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>
     ) {}
     
     async findOne({ mobile, password }: UserDto): Promise<UserEntity> {

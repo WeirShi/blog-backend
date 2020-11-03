@@ -13,6 +13,9 @@ export class ArticleDto {
     content: string;
 
     @IsNotEmpty()
+    html_content: string;
+
+    @IsNotEmpty()
     cover: string;
     
     @IsArray()

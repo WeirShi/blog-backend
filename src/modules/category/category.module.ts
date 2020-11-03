@@ -4,6 +4,7 @@ import { CategoryEntity } from './category.entity';
 import { CategoryService } from './category.service';
 import { CategoryController } from './category.controller';
 import { TokenMiddleware } from 'src/middleware/token.middleware';
+import { DateMiddleware } from 'src/middleware/date.middleware';
 
 
 @Module({
@@ -15,7 +16,7 @@ import { TokenMiddleware } from 'src/middleware/token.middleware';
 export class CategoryModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
         consumer
-          .apply(TokenMiddleware)
+          .apply(TokenMiddleware, DateMiddleware)
           .exclude(
               'blog/category/(.*)'
           )

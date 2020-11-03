@@ -3,6 +3,7 @@ export interface Article {
     id: number;
     title: string;
     content: string;
+    html_content: string;
     cover: string;
     is_publish: number;
     is_drafts: number;

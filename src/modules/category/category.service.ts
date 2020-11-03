@@ -11,8 +11,7 @@ import { dateFmt } from 'src/public/utils/time';
 @Injectable()
 export class CategoryService {
     constructor(
-        @InjectRepository(CategoryEntity)
-        private readonly categoryRepository: Repository<CategoryEntity>
+        @InjectRepository(CategoryEntity) private readonly categoryRepository: Repository<CategoryEntity>
     ) {}
 
     async pageQuery ({ pageSize, current }: Pagination): Promise<{ total: number, list: Category[] }> {

@@ -51,5 +51,5 @@ export class TokenMiddleware implements NestMiddleware {
             reject(error);
         }
     })
-}
+  }
 }

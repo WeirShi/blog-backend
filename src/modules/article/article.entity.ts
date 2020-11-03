@@ -23,6 +23,13 @@ export class ArticleEntity {
     content: string;
 
     @Column({
+        default: '',
+        charset: 'utf8mb4',
+        collation: 'utf8mb4_unicode_ci'
+    })
+    html_content: string;
+
+    @Column({
         default: ''
     })
     cover: string;
