@@ -6,7 +6,9 @@ import {
     HTTP_ADD_ERROR_TEXT,
     HTTP_ADD_SUCCESS_TEXT,
     HTTP_DELETE_SUCCESS_TEXT,
-    HTTP_UPDATE_SUCCESS_TEXT
+    HTTP_UPDATE_SUCCESS_TEXT,
+    HTTP_DELETE_ERROR_TEXT,
+    HTTP_UPDATE_ERROR_TEXT
 } from 'src/constants/text.constant';
 import { ResponseData } from 'src/interface/response.interface';
 import { ListData, ArticlePage, Article } from 'src/interface/article.interface';
@@ -36,11 +38,11 @@ export class ArticleController {
                 statusCode: 0
             }
         } catch (error) {
-            throw new BadRequestException({
-                message: HTTP_QUERY_ERROR_TEXT,
+            return {
                 statusCode: 400,
-                data: {}
-            });
+                data: error,
+                message: HTTP_QUERY_ERROR_TEXT
+            }
         }
     }
 
@@ -55,11 +57,11 @@ export class ArticleController {
                 message: HTTP_ADD_SUCCESS_TEXT
             }
         } catch (error) {
-            throw new BadRequestException({
-                message: HTTP_ADD_ERROR_TEXT,
+            return {
                 statusCode: 400,
-                data: {}
-            });
+                data: error,
+                message: HTTP_ADD_ERROR_TEXT
+            }
         }
     }
 
@@ -74,7 +76,11 @@ export class ArticleController {
                 message: HTTP_DELETE_SUCCESS_TEXT
             }
         } catch (error) {
-            return error.response;
+            return {
+                statusCode: 400,
+                data: error.response,
+                message: HTTP_DELETE_ERROR_TEXT
+            }
         }
     }
 
@@ -88,7 +94,11 @@ export class ArticleController {
                 message: HTTP_UPDATE_SUCCESS_TEXT
             }
         } catch (error) {
-            return error.response;
+            return {
+                statusCode: 400,
+                data: error.response,
+                message: HTTP_UPDATE_ERROR_TEXT
+            }
         }
     }
 
@@ -102,8 +112,11 @@ export class ArticleController {
                 message: HTTP_QUERY_SUCCESS_TEXT
             }
         } catch (error) {
-            console.log(error);
-            return error.response;
+            return {
+                statusCode: 400,
+                data: error.response,
+                message: HTTP_QUERY_ERROR_TEXT
+            }
         }
     }
 

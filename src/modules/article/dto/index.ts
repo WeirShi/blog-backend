@@ -4,31 +4,34 @@ import { Category } from 'src/interface/category.interface';
 
 
 export class ArticleDto {
-    id?: number;
+    readonly id?: number;
     
     @IsNotEmpty()
-    title: string;
+    readonly title: string;
 
     @IsNotEmpty()
-    content: string;
+    readonly description: string;
 
     @IsNotEmpty()
-    html_content: string;
+    readonly content: string;
 
     @IsNotEmpty()
-    cover: string;
+    readonly html_content: string;
+
+    @IsNotEmpty()
+    readonly cover: string;
     
     @IsArray()
     @IsNotEmpty()
-    tags: Tag[];
+    readonly tags: Tag[];
 
     @IsArray()
     @IsNotEmpty()
-    categories: Category[];
+    readonly categories: Category[];
 
-    is_publish?: number;
+    readonly is_publish?: number;
     
-    is_drafts?: number;
+    readonly is_drafts?: number;
 
-    is_delete?: number;
+    readonly is_delete?: number;
 }

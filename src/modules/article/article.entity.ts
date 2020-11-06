@@ -9,23 +9,22 @@ export class ArticleEntity {
     id: number;
 
     @Column({
-        default: '',
-        charset: 'utf8mb4',
-        collation: 'utf8mb4_unicode_ci'
+        default: ''
     })
     title: string;
 
     @Column({
-        default: '',
-        charset: 'utf8mb4',
-        collation: 'utf8mb4_unicode_ci'
+        default: ''
+    })
+    description: string;
+
+    @Column({
+        type: 'longtext'
     })
     content: string;
 
     @Column({
-        default: '',
-        charset: 'utf8mb4',
-        collation: 'utf8mb4_unicode_ci'
+        type: 'longtext'
     })
     html_content: string;
 

@@ -88,11 +88,12 @@ export class ArticleService {
 
 
     async addOne(dto: ArticleDto) {
-        const { title, content, cover, html_content, is_publish, is_delete, is_drafts, tags, categories } = dto;
+        const { title, content, cover, html_content, is_publish, is_delete, is_drafts, tags, categories, description } = dto;
         const article = new ArticleEntity();
         article.title = title;
         article.content = content;
         article.html_content = html_content;
+        article.description = description;
         article.cover = cover;
         article.is_publish = is_publish;
         article.is_delete = is_delete;
@@ -107,7 +108,7 @@ export class ArticleService {
     }
 
     async updateOne(params: ArticleDto): Promise<ArticleEntity> {
-        const { id, title, content, html_content, cover, tags, categories } = params;
+        const { id, title, content, html_content, cover, tags, categories, description } = params;
         const qb = this.articleRepository.createQueryBuilder('article');
         qb.where(`id=${id}`)
             .andWhere('is_delete=0')
@@ -122,7 +123,8 @@ export class ArticleService {
         }
         res.title = title;
         res.content = content;
-        res.html_content = html_content
+        res.html_content = html_content;
+        res.description = description;
         res.cover = cover;
         res.tags = this.handleTags(tags);
         res.categories = this.handleCategories(categories);
