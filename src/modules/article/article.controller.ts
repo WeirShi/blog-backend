@@ -234,4 +234,19 @@ export class ArticleController {
         }
     }
 
+    @Get('blog/article/next')
+    async getArticlePreOrNext(@Query('id') id: number): Promise<ResponseData<{}>> {
+        console.log(id);
+        try {
+            const res = await this.articleService.queryPreOrNextData(id);
+            return {
+                statusCode: 0,
+                message: HTTP_QUERY_SUCCESS_TEXT,
+                data: res
+            }
+        } catch (error) {
+            return error.response;
+        }
+    }
+
 }

@@ -2,7 +2,7 @@ import { Pagination } from './pagination.interface';
 export interface Article {
     id: number;
     title: string;
-    content: string;
+    content?: string;
     html_content: string;
     cover: string;
     is_publish: number;

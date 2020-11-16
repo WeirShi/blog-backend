@@ -262,7 +262,7 @@ export class ArticleService {
         const [ list, total ] = await qb.getManyAndCount();
         
         const newList = list.map(m => {
-            const { create_time, update_time, publish_time, ...others } = m;
+            const { create_time, update_time, publish_time, content, ...others } = m;
             return {
                 ...others,
                 create_time: create_time ? dateFmt(create_time) : null,
@@ -316,5 +316,33 @@ export class ArticleService {
         const article = Object.assign({}, res);
         const savedArticle = await this.articleRepository.save(article);
         return savedArticle;
+    }
+
+    // 查询某一条数据的前一条和后一条
+    async queryPreOrNextData(id: number): Promise<{ pre: Article | null; next: Article | null }> {
+        const res = await this.articleRepository.query(`
+            select * from article where id  in (
+                (select max(id) from article where id < ${id} and is_publish = 1), 
+                (select min(id) from article where id > ${id} and is_publish = 1)
+            )
+        `);
+        const [ article1, article2 ] = res;
+        let result = {
+            pre: null,
+            next: null
+        };
+        if (article1 && article2) {
+            result.pre = article1;
+            result.next = article2;
+        }
+        if (article1 && !article2) {
+            if (article1.id < id) {
+                result.pre = article1;
+            } else {
+                result.next = article1;
+            }
+        }
+
+        return result;
     }
 }
