@@ -207,9 +207,9 @@ export class ArticleController {
     }
 
     @Put('blog/article/like')
-    async likeArticleForBlog(@Body('id') id: number, @Body('is_like') isLike: number): Promise<ResponseData<{}>> {
+    async likeArticleForBlog(@Body('id') id: number): Promise<ResponseData<{}>> {
         try {
-            await this.articleService.addLikeTimes(id, isLike);
+            await this.articleService.addLikeTimes(id);
             return {
                 statusCode: 0,
                 message: HTTP_UPDATE_SUCCESS_TEXT,
@@ -236,7 +236,6 @@ export class ArticleController {
 
     @Get('blog/article/next')
     async getArticlePreOrNext(@Query('id') id: number): Promise<ResponseData<{}>> {
-        console.log(id);
         try {
             const res = await this.articleService.queryPreOrNextData(id);
             return {

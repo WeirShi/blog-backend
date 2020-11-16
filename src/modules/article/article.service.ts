@@ -142,7 +142,6 @@ export class ArticleService {
             .leftJoinAndSelect('article.tags', 'tags')
             .leftJoinAndSelect('article.categories', 'categories')
         const res = await qb.getOne();
-        console.log('res', res);
         if (!res) {
             throw new BadRequestException({
                 message: HTTP_QUERY_ERROR_TEXT,
@@ -167,7 +166,6 @@ export class ArticleService {
             is_delete: 0,
             is_publish: 0
         });
-        console.log(res);
         if (!res) {
             throw new BadRequestException({
                 message: HTTP_DELETE_ERROR_TEXT,
@@ -298,7 +296,7 @@ export class ArticleService {
     }
 
     // 新增点赞次数
-    async addLikeTimes(id: number, isLike: number): Promise<ArticleEntity> {
+    async addLikeTimes(id: number): Promise<ArticleEntity> {
         const res = await this.articleRepository.findOne({
             id: id,
             is_delete: 0,
@@ -311,7 +309,7 @@ export class ArticleService {
                 data: {}
             });
         }
-        isLike === 1 ? res.like_times+=1 : res.like_times-=1;
+        res.like_times += 1;
         res.update_time = new Date();
         const article = Object.assign({}, res);
         const savedArticle = await this.articleRepository.save(article);
@@ -319,7 +317,7 @@ export class ArticleService {
     }
 
     // 查询某一条数据的前一条和后一条
-    async queryPreOrNextData(id: number): Promise<{ pre: Article | null; next: Article | null }> {
+    async queryPreOrNextData(id: number): Promise<{ pre: {id: number; title: string;} | null; next: {id: number; title: string;} | null }> {
         const res = await this.articleRepository.query(`
             select * from article where id  in (
                 (select max(id) from article where id < ${id} and is_publish = 1), 
@@ -332,14 +330,26 @@ export class ArticleService {
             next: null
         };
         if (article1 && article2) {
-            result.pre = article1;
-            result.next = article2;
+            result.pre = {
+                id: article1.id,
+                title: article1.title
+            };
+            result.next = {
+                id: article2.id,
+                title: article2.title
+            };
         }
         if (article1 && !article2) {
             if (article1.id < id) {
-                result.pre = article1;
+                result.pre = {
+                    id: article1.id,
+                    title: article1.title
+                };
             } else {
-                result.next = article1;
+                result.next = {
+                    id: article1.id,
+                    title: article1.title
+                };
             }
         }
 
