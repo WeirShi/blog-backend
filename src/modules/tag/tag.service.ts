@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Pagination } from 'src/interface/pagination.interface';
 import { Tag } from 'src/interface/tag.interface';
+import { Article } from 'src/interface/article.interface';
 import { TagDto } from './dto';
 import { HTTP_ERROR_TEXT, PARAM_NAME_EXIST, HTTP_QUERY_ERROR_TEXT } from 'src/constants/text.constant';
 import { dateFmt } from 'src/public/utils/time';
@@ -21,7 +22,7 @@ export class TagService {
         qb.where(`tag.is_delete=0`)
             .skip(pageSize * (current - 1))
             .take(pageSize)
-            .leftJoinAndSelect('tag.articles', 'article')
+            .leftJoinAndSelect('tag.articles', 'article', 'article.is_delete=0 and article.is_publish=1')
             .orderBy('tag.sort', 'DESC')
 
         const [ list, total] = await qb.getManyAndCount();
@@ -44,7 +45,7 @@ export class TagService {
     async getAll(): Promise<Tag[]>{
         const qb = this.tagRepository.createQueryBuilder('tag');
         qb.where(`tag.is_delete=0`)
-            .leftJoinAndSelect('tag.articles', 'article')
+            .leftJoinAndSelect('tag.articles', 'article', 'article.is_delete=0 and article.is_publish=1')
             .orderBy('tag.sort', 'DESC')
             .addOrderBy('tag.create_time', 'DESC')
         const res = await qb.getMany();
@@ -66,6 +67,35 @@ export class TagService {
         });
 
         return newList;
+    }
+
+    async getOneTagOfArticles(id: number): Promise<Article[]> {
+        const qb = this.tagRepository.createQueryBuilder('tag');
+        qb.where(`tag.is_delete=0`)
+            .andWhere(`tag.id=${id}`)
+            .leftJoinAndSelect('tag.articles', 'article', 'article.is_delete=0 and article.is_publish=1')
+        const res = await qb.getOne();
+        if (!res) {
+            throw new BadRequestException({
+                statusCode: 400,
+                message: HTTP_QUERY_ERROR_TEXT,
+                data: {}
+            })
+        }
+
+        const { articles } = res;
+        const newArticles = articles.map(article => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { create_time, update_time, publish_time, content, ...others } = article;
+            return {
+                ...others,
+                create_time: create_time ? dateFmt(create_time) : null,
+                update_time: update_time ? dateFmt(update_time) : null,
+                publish_time: publish_time ? dateFmt(publish_time) : null,
+            }
+        });
+
+        return newArticles;
     }
 
 

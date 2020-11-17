@@ -260,6 +260,7 @@ export class ArticleService {
         const [ list, total ] = await qb.getManyAndCount();
         
         const newList = list.map(m => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { create_time, update_time, publish_time, content, ...others } = m;
             return {
                 ...others,
@@ -325,7 +326,7 @@ export class ArticleService {
             )
         `);
         const [ article1, article2 ] = res;
-        let result = {
+        const result = {
             pre: null,
             next: null
         };

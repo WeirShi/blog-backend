@@ -112,11 +112,7 @@ export class ArticleController {
                 message: HTTP_QUERY_SUCCESS_TEXT
             }
         } catch (error) {
-            return {
-                statusCode: 400,
-                data: error.response,
-                message: HTTP_QUERY_ERROR_TEXT
-            }
+            return error.response;
         }
     }
 
@@ -247,5 +243,4 @@ export class ArticleController {
             return error.response;
         }
     }
-
 }

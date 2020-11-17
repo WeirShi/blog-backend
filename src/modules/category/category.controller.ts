@@ -115,4 +115,18 @@ export class CategoryController {
         }
     }
 
+    @Get('blog/category/articles')
+    async getArticlesOfTag(@Query('id') id: string) {
+        try {
+            const res = await this.categoryService.getOneCategoryOfArticles(Number(id));
+            return {
+                statusCode: 0,
+                data: res,
+                message: HTTP_QUERY_SUCCESS_TEXT
+            }
+        } catch (error) {
+            return error.response;
+        }
+    }
+
 }
