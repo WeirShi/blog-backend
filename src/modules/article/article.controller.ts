@@ -243,4 +243,23 @@ export class ArticleController {
             return error.response;
         }
     }
+
+    // @Get('blog/article/by/category')
+    // async getArticleByCategory(
+    //     @Query('id') id: number,
+    //     @Query('pageSize') pageSize: number,
+    //     @Query('current') current: number,
+    // ): Promise<ResponseData<{}>> {
+    //     try {
+    //         const res = await this.articleService.queryArticleListByCategoryOrTag(id, pageSize, current);
+    //         return {
+    //             statusCode: 0,
+    //             message: HTTP_QUERY_SUCCESS_TEXT,
+    //             data: res
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //         return error.response;
+    //     }
+    // }
 }

@@ -356,4 +356,23 @@ export class ArticleService {
 
         return result;
     }
+
+    // async queryArticleListByCategoryOrTag (id, pageSize, current) {
+    //     const qb = this.articleRepository.createQueryBuilder('article');
+    //     qb.where('article.is_delete=0')
+    //         .andWhere('article.is_publish=1')
+    //         .andWhere('article.is_drafts=0')
+    //         .skip(pageSize * (current - 1))
+    //         .take(pageSize)
+    //         .leftJoinAndSelect('article.categories', 'category')
+    //         .leftJoinAndSelect('article.tags', 'tag')
+    //         .orderBy('article.create_time', 'DESC')
+
+
+    //     const [ list, total ] = await qb.getManyAndCount();
+    //     console.log('list', list);
+    //     console.log('total', total);
+
+    //     return list;
+    // }
 }

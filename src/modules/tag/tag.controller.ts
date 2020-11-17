@@ -111,7 +111,7 @@ export class TagController {
     }
 
     @Get('blog/tag/articles')
-    async getArticlesOfTag(@Query('id') id: string) {
+    async getArticlesOfTag(@Query('id') id: string): Promise<ResponseData<Tag>> {
         try {
             const res = await this.tagService.getOneTagOfArticles(Number(id));
             return {

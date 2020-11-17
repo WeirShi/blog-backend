@@ -116,7 +116,7 @@ export class CategoryController {
     }
 
     @Get('blog/category/articles')
-    async getArticlesOfTag(@Query('id') id: string) {
+    async getArticlesOfTag(@Query('id') id: string): Promise<ResponseData<Category>> {
         try {
             const res = await this.categoryService.getOneCategoryOfArticles(Number(id));
             return {

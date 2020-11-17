@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Pagination } from 'src/interface/pagination.interface';
 import { Category } from 'src/interface/category.interface';
-import { Article } from 'src/interface/article.interface';
+// import { Article } from 'src/interface/article.interface';
 import { CategoryDto } from './dto';
 import { HTTP_ERROR_TEXT, PARAM_NAME_EXIST, HTTP_QUERY_ERROR_TEXT } from 'src/constants/text.constant';
 import { dateFmt } from 'src/public/utils/time';
@@ -128,7 +128,7 @@ export class CategoryService {
         return savedCategory;
     }
 
-    async getOneCategoryOfArticles(id: number): Promise<Article[]> {
+    async getOneCategoryOfArticles(id: number): Promise<Category> {
         const qb = this.categoryRepository.createQueryBuilder('category');
         qb.where(`category.is_delete=0`)
             .andWhere(`category.id=${id}`)
@@ -141,8 +141,7 @@ export class CategoryService {
                 data: {}
             })
         }
-
-        const { articles } = res;
+        const {create_time, update_time, articles, ...others} = res;
         const newArticles = articles.map(article => {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { create_time, update_time, publish_time, content, ...others } = article;
@@ -153,7 +152,12 @@ export class CategoryService {
                 publish_time: publish_time ? dateFmt(publish_time) : null,
             }
         });
-
-        return newArticles;
+        const category = {
+            create_time: create_time ? dateFmt(create_time) : null,
+            update_time: update_time ? dateFmt(update_time) : null,
+            articles: newArticles,
+            ...others
+        }
+        return category;
     }
 }
