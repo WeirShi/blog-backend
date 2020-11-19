@@ -357,22 +357,30 @@ export class ArticleService {
         return result;
     }
 
-    // async queryArticleListByCategoryOrTag (id, pageSize, current) {
-    //     const qb = this.articleRepository.createQueryBuilder('article');
-    //     qb.where('article.is_delete=0')
-    //         .andWhere('article.is_publish=1')
-    //         .andWhere('article.is_drafts=0')
-    //         .skip(pageSize * (current - 1))
-    //         .take(pageSize)
-    //         .leftJoinAndSelect('article.categories', 'category')
-    //         .leftJoinAndSelect('article.tags', 'tag')
-    //         .orderBy('article.create_time', 'DESC')
+    async queryArticleListByCategoryOrTag (id: number, type = 'tag') {
+        const qb = this.articleRepository.createQueryBuilder('article');
+        qb.where('article.is_delete=0')
+            .andWhere('article.is_publish=1')
+            .andWhere('article.is_drafts=0')
+            .leftJoinAndSelect('article.categories', 'category')
+            .orderBy('article.create_time', 'DESC')
+            .leftJoinAndSelect('article.tags', 'tag')
+            .where(type === 'tag' ? 'tag.id = :id' : 'category.id = :id', { id })
 
-
-    //     const [ list, total ] = await qb.getManyAndCount();
-    //     console.log('list', list);
-    //     console.log('total', total);
-
-    //     return list;
-    // }
+        const list = await qb.getMany();
+        console.log(list);
+        const newList = list.map(m => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { create_time, update_time, publish_time, content, ...others } = m;
+            return {
+                ...others,
+                create_time: create_time ? dateFmt(create_time) : null,
+                update_time: update_time ? dateFmt(update_time) : null,
+                publish_time: publish_time ? dateFmt(publish_time) : null
+            }
+        });
+        return {
+            list: newList
+        }
+    }
 }

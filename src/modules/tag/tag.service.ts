@@ -68,41 +68,6 @@ export class TagService {
         return newList;
     }
 
-    async getOneTagOfArticles(id: number): Promise<Tag> {
-        const qb = this.tagRepository.createQueryBuilder('tag');
-        qb.where(`tag.is_delete=0`)
-            .andWhere(`tag.id=${id}`)
-            .leftJoinAndSelect('tag.articles', 'article', 'article.is_delete=0 and article.is_publish=1')
-        const res = await qb.getOne();
-        if (!res) {
-            throw new BadRequestException({
-                statusCode: 400,
-                message: HTTP_QUERY_ERROR_TEXT,
-                data: {}
-            })
-        }
-
-        const {create_time, update_time, articles, ...others} = res;
-        const newArticles = articles.map(article => {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { create_time, update_time, publish_time, content, ...others } = article;
-            return {
-                ...others,
-                create_time: create_time ? dateFmt(create_time) : null,
-                update_time: update_time ? dateFmt(update_time) : null,
-                publish_time: publish_time ? dateFmt(publish_time) : null,
-            }
-        });
-        const tag = {
-            create_time: create_time ? dateFmt(create_time) : null,
-            update_time: update_time ? dateFmt(update_time) : null,
-            articles: newArticles,
-            ...others
-        }
-        return tag;
-    }
-
-
     async addOne(dto: TagDto): Promise<TagEntity> {
         const { name, sort, color } = dto;
         const res = await this.tagRepository.findOne({

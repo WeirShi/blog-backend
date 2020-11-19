@@ -244,22 +244,21 @@ export class ArticleController {
         }
     }
 
-    // @Get('blog/article/by/category')
-    // async getArticleByCategory(
-    //     @Query('id') id: number,
-    //     @Query('pageSize') pageSize: number,
-    //     @Query('current') current: number,
-    // ): Promise<ResponseData<{}>> {
-    //     try {
-    //         const res = await this.articleService.queryArticleListByCategoryOrTag(id, pageSize, current);
-    //         return {
-    //             statusCode: 0,
-    //             message: HTTP_QUERY_SUCCESS_TEXT,
-    //             data: res
-    //         }
-    //     } catch (error) {
-    //         console.log(error);
-    //         return error.response;
-    //     }
-    // }
+    @Get('blog/article/by/categoryortag')
+    async getArticleByCategoryOrTag(
+        @Query('id') id: number,
+        @Query('type') type: string
+    ): Promise<ResponseData<{}>> {
+        try {
+            const res = await this.articleService.queryArticleListByCategoryOrTag(id, type);
+            const { list} = res;
+            return {
+                message: HTTP_QUERY_SUCCESS_TEXT,
+                data: list,
+                statusCode: 0
+            }
+        } catch (error) {
+            return error.response;
+        }
+    }
 }
